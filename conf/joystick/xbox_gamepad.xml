@@ -35,12 +35,12 @@ so e.g. HatDown(dpad)
 
 <joystick>
   <input>
-    <axis index="0" name="yaw" limit="1.00" exponent="0.7" trim="0"/>
-    <axis index="1" name="throttle"/>
+    <axis index="3" name="yaw" limit="1.00" exponent="0.7" trim="0"/>
+    <axis index="4" name="NotRT"/>
     <axis index="2" name="LT" limit="1.00" trim="127"/>
-    <axis index="3" name="roll" limit="1.00" exponent="0.7" trim="0"/>
-    <axis index="4" name="pitch" limit="1.00" exponent="0.7" trim="0"/>
-    <axis index="5" name="RT" limit="1.00" trim="127"/>
+    <axis index="0" name="roll" limit="1.00" exponent="0.7" trim="0"/>
+    <axis index="1" name="pitch" limit="1.00" exponent="0.7" trim="0"/>
+    <axis index="5" name="throttle" limit="1.00" trim="0"/>
     <button index="0" name="A"/>
     <button index="1" name="B"/>
     <button index="2" name="X"/>
