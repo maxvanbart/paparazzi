@@ -8,4 +8,11 @@
   </doc>
   <depends>cv_detect_color_object</depends>
   <!-- TODO Specify header, init, periodic, makefile sections  -->
+  <header>
+    <file name="mav_exercise.h"/>
+  </header>
+
+  <makefile target="ap|nps">
+    <file name="mav_exercise.c"/>
+  </makefile>
 </module>
