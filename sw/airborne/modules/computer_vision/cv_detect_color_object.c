@@ -25,6 +25,9 @@
  * if you are over the defined object or not
  */
 
+// Test C++ interface
+#include "modules/computer_vision/test_interface.h"
+
 // Own header
 #include "modules/computer_vision/cv_detect_color_object.h"
 #include "modules/computer_vision/cv.h"
@@ -97,6 +100,8 @@ static struct image_t *object_detector(struct image_t *img, uint8_t filter)
   uint8_t cb_min, cb_max;
   uint8_t cr_min, cr_max;
   bool draw;
+
+  testfunction(5);
 
   switch (filter){
     case 1:
@@ -223,6 +228,7 @@ uint32_t find_object_centroid(struct image_t *img, int32_t* p_xc, int32_t* p_yc,
       uint8_t *yp, *up, *vp;
       if (x % 2 == 0) {
         // Even x
+        // Pull request for the pixel order colours
         up = &buffer[y * 2 * img->w + 2 * x];      // U
         yp = &buffer[y * 2 * img->w + 2 * x + 1];  // Y1
         vp = &buffer[y * 2 * img->w + 2 * x + 2];  // V
@@ -242,10 +248,95 @@ uint32_t find_object_centroid(struct image_t *img, int32_t* p_xc, int32_t* p_yc,
         tot_y += y;
         if (draw){
           *yp = 255;  // make pixel brighter in image
+//          *up = 200;
+//          *vp = 220;
         }
       }
     }
   }
+//    {
+//        int n = 1920*2;
+//        uint8_t *yp, *up, *vp;
+//        up = &buffer[0 + 3 * n];      // U
+//        yp = &buffer[1 + 3 * n];  // Y1
+//        vp = &buffer[2 + 3 * n];  // V
+//
+//        *yp = 255;  // make pixel brighter in image
+//        *up = 0;
+//        *vp = 0;
+//    }
+
+
+//    printf("Hello world!\n");
+//    {
+//
+//        size_t n = sizeof(uint8_t)/sizeof(&buffer);
+//        printf("Size of array: %f", n);
+//
+//    }
+
+//    {
+//        int n = 480*100;
+//        uint8_t *yp, *up, *vp;
+//        up = &buffer[0 + 3 * n];      // U
+//        yp = &buffer[1 + 3 * n];  // Y1
+//        vp = &buffer[2 + 3 * n];  // V
+//
+//        *yp = 255;  // make pixel brighter in image
+//        *up = 0;
+//        *vp = 0;
+//    }
+//
+//    {
+//        int n = 240 + 1920;
+//        uint8_t *yp, *up, *vp;
+//        up = &buffer[0 + 3 * n];      // U
+//        yp = &buffer[1 + 3 * n];  // Y1
+//        vp = &buffer[2 + 3 * n];  // V
+//
+//        *yp = 255;  // make pixel brighter in image
+//        *up = 0;
+//        *vp = 0;
+//    }
+//
+//    {
+//        int n = 1920;
+//        uint8_t *yp, *up, *vp;
+//        up = &buffer[0 + 3 * n];      // U
+//        yp = &buffer[1 + 3 * n];  // Y1
+//        vp = &buffer[2 + 3 * n];  // V
+//
+//        *yp = 255;  // make pixel brighter in image
+//        *up = 0;
+//        *vp = 0;
+//    }
+//
+//    {
+//        int n = 320 * 480;
+//        uint8_t *yp, *up, *vp;
+//        up = &buffer[0 + 3 * n];      // U
+//        yp = &buffer[1 + 3 * n];  // Y1
+//        vp = &buffer[2 + 3 * n];  // V
+//
+//        *yp = 255;  // make pixel brighter in image
+//        *up = 0;
+//        *vp = 0;
+//    }
+//
+//    {
+//        int n = 320 * 480 + 240;
+//        uint8_t *yp, *up, *vp;
+//        up = &buffer[0 + 3 * n];      // U
+//        yp = &buffer[1 + 3 * n];  // Y1
+//        vp = &buffer[2 + 3 * n];  // V
+//
+//        *yp = 255;  // make pixel brighter in image
+//        *up = 0;
+//        *vp = 0;
+//    }
+
+
+
   if (cnt > 0) {
     *p_xc = (int32_t)roundf(tot_x / ((float) cnt) - img->w * 0.5f);
     *p_yc = (int32_t)roundf(img->h * 0.5f - tot_y / ((float) cnt));
