@@ -20,6 +20,7 @@
     <periodic fun="interface()" freq="50"/>
 
     <makefile target="ap|nps">
+        <!-- Make sure to add any necessary files here in order to make the compiler detect them -->
         <file name="big_object_detector.c"/>
         <file name="interface.cpp"/>
     </makefile>
