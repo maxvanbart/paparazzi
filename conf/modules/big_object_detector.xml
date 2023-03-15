@@ -21,6 +21,7 @@
 
     <makefile target="ap|nps">
         <file name="big_object_detector.c"/>
+        <file name="interface.cpp"/>
     </makefile>
 
 </module>
