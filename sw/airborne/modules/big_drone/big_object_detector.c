@@ -10,5 +10,5 @@ void interface_init(void) {
 
 void interface(void) {
     int i = 5;
-    printf("Hello I am module McNew\n");
+    printf("Hello I am module McNew 234\n");
 }
