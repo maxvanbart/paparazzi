@@ -1,0 +1,27 @@
+<!DOCTYPE module SYSTEM "module.dtd">
+
+<module name="big_object_detector" dir="computer_vision">
+    <doc>
+        <description>
+            Module for all the computer vision.
+        </description>
+    </doc>
+
+
+    <dep>
+        <depends>video_thread</depends>
+    </dep>
+
+    <header>
+        <file name="big_object_detector.h"/>
+    </header>
+
+    <init fun="interface_init()"/>
+    <periodic fun="interface()" freq="50"/>
+
+    <makefile target="ap|nps">
+        <file name="big_object_detector.c"/>
+    </makefile>
+
+</module>
+

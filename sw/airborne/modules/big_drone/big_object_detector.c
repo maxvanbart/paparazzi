@@ -1,6 +1,14 @@
 #include "big_object_detector.h"
-#include<stdio.h>
+#include <stdio.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include <math.h>
+#include "pthread.h"
 
+// Required modules
+#include "modules/core/abi.h"
+
+// Submodules
 #include "interface.h"
 
 
@@ -8,7 +16,7 @@ bool interface_draw1 = false;
 bool interface_draw2 = false;
 
 
-static struct image_t *object_detector(struct image_t *img, uint8_t filter)
+static struct image_t *big_object_detector(struct image_t *img, uint8_t filter)
 {
     bool draw;
 
@@ -40,16 +48,16 @@ static struct image_t *object_detector(struct image_t *img, uint8_t filter)
 
 
 
-struct image_t *object_detector1(struct image_t *img, uint8_t camera_id);
-struct image_t *object_detector1(struct image_t *img, uint8_t camera_id __attribute__((unused)))
+struct image_t *big_object_detector1(struct image_t *img, uint8_t camera_id);
+struct image_t *big_object_detector1(struct image_t *img, uint8_t camera_id __attribute__((unused)))
 {
-    return object_detector(img, 1);
+    return big_object_detector(img, 1);
 }
 
-struct image_t *object_detector2(struct image_t *img, uint8_t camera_id);
-struct image_t *object_detector2(struct image_t *img, uint8_t camera_id __attribute__((unused)))
+struct image_t *big_object_detector2(struct image_t *img, uint8_t camera_id);
+struct image_t *big_object_detector2(struct image_t *img, uint8_t camera_id __attribute__((unused)))
 {
-    return object_detector(img, 2);
+    return big_object_detector(img, 2);
 }
 
 
@@ -59,7 +67,7 @@ void big_detector_init(void) {
             interface_draw1 = COLOR_OBJECT_DETECTOR_DRAW1;
         #endif
 
-        cv_add_to_device(&COLOR_OBJECT_DETECTOR_CAMERA1, object_detector1, COLOR_OBJECT_DETECTOR_FPS1, 0);
+        cv_add_to_device(&COLOR_OBJECT_DETECTOR_CAMERA1, big_object_detector1, COLOR_OBJECT_DETECTOR_FPS1, 0);
     #endif
 
     #ifdef COLOR_OBJECT_DETECTOR_CAMERA2
@@ -67,7 +75,7 @@ void big_detector_init(void) {
             interface_draw2 = COLOR_OBJECT_DETECTOR_DRAW2;
         #endif
 
-        cv_add_to_device(&COLOR_OBJECT_DETECTOR_CAMERA2, object_detector2, COLOR_OBJECT_DETECTOR_FPS2, 1);
+        cv_add_to_device(&COLOR_OBJECT_DETECTOR_CAMERA2, big_object_detector2, COLOR_OBJECT_DETECTOR_FPS2, 1);
     #endif
 }
 
@@ -76,6 +84,6 @@ void big_detector(void) {
     // Periodic function, here we transfer the results from the image processing to the navigation module
     // Idk how it works or how to do it but it is done here
     int i = 5;
-    printf("Hello I am module McNew 234\n");
-    test_function(i);
+    printf("Hello I am module McModule!\n");
+//    test_function(i);
 }
