@@ -5,6 +5,10 @@
         <description>
             Module for all the computer vision.
         </description>
+        <define name="COLOR_OBJECT_DETECTOR_CAMERA1" value="front_camera|bottom_camera" description="Video device to use"/>
+        <define name="COLOR_OBJECT_DETECTOR_DRAW1" value="FALSE|TRUE" description="Whether or not to draw on image"/>
+        <define name="COLOR_OBJECT_DETECTOR_CAMERA2" value="front_camera|bottom_camera" description="Video device to use"/>
+        <define name="COLOR_OBJECT_DETECTOR_DRAW2" value="FALSE|TRUE" description="Whether or not to draw on image"/>
     </doc>
 
 
@@ -16,8 +20,8 @@
         <file name="big_object_detector.h"/>
     </header>
 
-    <init fun="interface_init()"/>
-    <periodic fun="interface()" freq="50"/>
+    <init fun="big_detector_init()"/>
+    <periodic fun="big_detector()" freq="50"/>
 
     <makefile target="ap|nps">
         <!-- Make sure to add any necessary files here in order to make the compiler detect them -->

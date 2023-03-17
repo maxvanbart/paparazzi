@@ -101,7 +101,7 @@ static struct image_t *object_detector(struct image_t *img, uint8_t filter)
   uint8_t cr_min, cr_max;
   bool draw;
 
-  testfunction(5);
+//  testfunction(5);
 
   switch (filter){
     case 1:

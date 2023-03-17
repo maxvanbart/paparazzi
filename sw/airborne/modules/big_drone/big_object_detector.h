@@ -3,5 +3,6 @@
 
 extern void interface(void);
 extern void interface_init(void);
+struct image_t *interface_img(struct image_t *img);
 
 #endif
