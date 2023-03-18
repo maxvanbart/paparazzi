@@ -38,8 +38,15 @@ static struct image_t *big_object_detector(struct image_t *img, uint8_t filter)
     uint8_t *img_arr = img->buf;
     int h = img->h;
     int w = img->w;
-    
-    detect_yolo(&img_arr, w, h);
+
+    int size = h * w * 2;
+
+    unsigned int int_arr[size];
+    for (int i = 0; i < size; i++) {
+        int_arr[i] = img_arr[i];
+    }
+
+    detect_yolo(int_arr, w, h);
     
     
     // Pass information using a mutex

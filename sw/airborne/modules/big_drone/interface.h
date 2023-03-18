@@ -6,7 +6,7 @@ extern "C" {
 #endif
 
 int test_function(int n);
-int detect_yolo(uint8_t *img, int w, int h);
+int detect_yolo(const unsigned int *img, const int w, const int h);
 
 #ifdef __cplusplus
 }
