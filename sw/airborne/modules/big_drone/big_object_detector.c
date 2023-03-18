@@ -35,6 +35,13 @@ static struct image_t *big_object_detector(struct image_t *img, uint8_t filter)
     // Do things
     test_function(filter * 40);
 
+    uint8_t *img_arr = img->buf;
+    int h = img->h;
+    int w = img->w;
+    
+    detect_yolo(&img_arr, w, h);
+    
+    
     // Pass information using a mutex
 //    pthread_mutex_lock(&mutex);
 //    global_filters[filter-1].color_count = count;
