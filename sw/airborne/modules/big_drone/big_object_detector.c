@@ -97,7 +97,7 @@ void big_detector_init(void) {
 void big_detector(void) {
     // Periodic function, here we transfer the results from the image processing to the navigation module
     // Idk how it works or how to do it but it is done here
-    int i = 5;
-    printf("Hello I am module McModule!\n");
+//    int i = 5;
+//    printf("Hello I am module McModule!\n");
 //    test_function(i);
 }

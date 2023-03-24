@@ -3,30 +3,31 @@
 //
 
 #include "net.h"
+#include <chrono>
 
 Tensor net(Tensor img) {
 
-    int time_before_loop_begins = time(NULL);
+    auto start = std::chrono::high_resolution_clock::now();
 
     Tensor x = img;
-    Conv2d l1(3, 24, 3, 1, 1);
-    Conv2d l2(24, 32, 3, 1, 1);
-    Conv2d l3(32, 64, 3, 1, 1);
-    Conv2d l4(64, 32, 1, 1, 0);
-    Conv2d l5(32, 64, 3, 1, 1);
-    Conv2d l6(64, 128, 3, 1, 1);
-    Conv2d l7(128, 64, 1, 1, 0);
-    Conv2d l8(64, 128, 3, 1, 1);
-    Conv2d l9(128, 256, 3, 1, 1);
-    Conv2d l10(256, 128, 1, 1, 0);
-    Conv2d l11(128, 256, 3, 1, 1);
-    Conv2d l12(256, 128, 1, 1, 0);
-    Conv2d l13(128, 256, 3, 1, 1);
-    Conv2d l14(256, 512, 3, 1, 1);
-    Conv2d l15(512, 128, 1, 1, 0);
-    Conv2d l16(128, 512, 3, 1, 1);
-    Conv2d l17(512, 128, 1, 1, 0);
-    Conv2d l18(128, 512, 3, 1, 1);
+    Conv2d l1(3, 8, 3, 1, 1);
+    Conv2d l2(8, 12, 3, 1, 1);
+    Conv2d l3(12, 20, 3, 1, 1);
+    Conv2d l4(20, 12, 1, 1, 0);
+    Conv2d l5(12, 20, 3, 1, 1);
+    Conv2d l6(20, 40, 3, 1, 1);
+    Conv2d l7(40, 20, 1, 1, 0);
+    Conv2d l8(20, 40, 3, 1, 1);
+    Conv2d l9(40, 100, 3, 1, 1);
+    Conv2d l10(100, 40, 1, 1, 0);
+    Conv2d l11(40, 100, 3, 1, 1);
+    Conv2d l12(100, 40, 1, 1, 0);
+    Conv2d l13(40, 100, 3, 1, 1);
+    Conv2d l14(100, 150, 3, 1, 1);
+    Conv2d l15(150, 40, 1, 1, 0);
+    Conv2d l16(40, 150, 3, 1, 1);
+    Conv2d l17(150, 40, 1, 1, 0);
+    Conv2d l18(40, 150, 3, 1, 1);
 
     l1.init_params();
     l2.init_params();
@@ -73,28 +74,28 @@ Tensor net(Tensor img) {
     x = relu(x);
     x = l10.forward(x);
     x = relu(x);
-    x = l11.forward(x);
-    x = relu(x);
-    x = l12.forward(x);
-    x = relu(x);
+//    x = l11.forward(x);
+//    x = relu(x);
+//    x = l12.forward(x);
+//    x = relu(x);
     x = l13.forward(x);
     x = relu(x);
     x = maxpool(x, 2, 2);
     x = l14.forward(x);
     x = relu(x);
-    x = l15.forward(x);
-    x = relu(x);
-    x = l16.forward(x);
-    x = relu(x);
-    x = l17.forward(x);
-    x = relu(x);
-    x = l18.forward(x);
-    x = relu(x);
+//    x = l15.forward(x);
+//    x = relu(x);
+//    x = l16.forward(x);
+//    x = relu(x);
+//    x = l17.forward(x);
+//    x = relu(x);
+//    x = l18.forward(x);
+//    x = relu(x);
 
-    int time_after_loop_ends = time(NULL);
-    int time_diff = time_after_loop_ends - time_before_loop_begins;
+    auto stop = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
 
-    std::cout << "Time taken for forward pass: "<< time_diff << " seconds." << std::endl;
+    std::cout << "Time taken for forward pass: "<< duration.count() << " ms" << std::endl;
 
     return x;
 }
