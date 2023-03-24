@@ -1,6 +1,8 @@
 #include<iostream>
 
 #include "interface.h"
+#include "net.h"
+#include "tensor.h"
 
 int test_function(int n) {
     std::cout << "This interface should be on the image processing thread! " << n << std::endl;
@@ -12,6 +14,11 @@ int detect_yolo(const unsigned int *img, const int w, const int h) {
 
 
     std::cout << "Processing image of " << w << " x " << h << ".\n";
+
+    Tensor t8(240, 520, 3);
+    std::cout << t8.width << " " << t8.height << " " << t8.depth << std::endl;
+    Tensor t9 = net(t8);
+    std::cout << t9.width << " " << t9.height << " " << t9.depth << std::endl;
 
 //    // This code dumps the entire image into the program output for reasons
 //    // don't know why I though this would be a good idea as it currently just clutters the log

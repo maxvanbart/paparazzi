@@ -27,6 +27,13 @@
         <!-- Make sure to add any necessary files here in order to make the compiler detect them -->
         <file name="big_object_detector.c"/>
         <file name="interface.cpp"/>
+        <file name="convolute.cpp"/>
+        <file name="linear.cpp"/>
+        <file name="MaxPool.cpp"/>
+        <file name="net.cpp"/>
+        <file name="padding.cpp"/>
+        <file name="relu.cpp"/>
+        <file name="tensor.cpp"/>
     </makefile>
 
 </module>
