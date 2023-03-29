@@ -1,4 +1,4 @@
-<!DOCTYPE module SYSTEM "module.dtd">
+  <!DOCTYPE module SYSTEM "module.dtd">
 
 <module name="video_thread" dir="computer_vision">
   <doc>

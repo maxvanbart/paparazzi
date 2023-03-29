@@ -45,10 +45,10 @@ static uint8_t chooseRandomIncrementAvoidance(void);
 
 enum navigation_state_t {
   SAFE,
-  //OBSTACLE_FOUND,
-  OBSTACLE_FOUND_OPTICFLOW,
+  OBSTACLE_FOUND,
+  //OBSTACLE_FOUND_OPTICFLOW,
   SEARCH_FOR_SAFE_HEADING,
-  SEARCH_FOR_SAFE_HEADING_OPTICFLOW,
+  //SEARCH_FOR_SAFE_HEADING_OPTICFLOW,
   OUT_OF_BOUNDS
 };
 
@@ -56,7 +56,7 @@ enum navigation_state_t {
 float oa_color_count_frac = 0.18f;
 
 // define and initialise global variables
-enum navigation_state_t navigation_state = SEARCH_FOR_SAFE_HEADING_OPTICFLOW; //SEARCH_FOR_SAFE_HEADING;
+enum navigation_state_t navigation_state = SEARCH_FOR_SAFE_HEADING;//SEARCH_FOR_SAFE_HEADING_OPTICFLOW; //
 int32_t color_count = 0;                // orange color count from color filter for obstacle detection
 int32_t divergence = 0;
 int16_t obstacle_free_confidence = 0;   // a measure of how certain we are that the way ahead is safe.
@@ -94,7 +94,7 @@ static void optical_flow_cb(uint8_t __attribute__ ((unused)) sender_id,
                             int32_t __attribute__ ((unused)) flow_der_y, float __attribute__ ((unused)) quality,
                             float size_divergence)
 {
-    divergence = size_divergence;
+    divergence = 10*size_divergence;
 }
 /*
  * Initialisation function, setting the colour filter, random seed and heading_increment
@@ -139,80 +139,145 @@ void orange_avoider_periodic(void)
 
   float moveDistance = fminf(maxDistance, 0.5f * obstacle_free_confidence);
 
-  switch (navigation_state){
-    case SAFE:
-      // Move waypoint forward
-      moveWaypointForward(WP_TRAJECTORY, 1.f * moveDistance);
-      if (!InsideObstacleZone(WaypointX(WP_TRAJECTORY),WaypointY(WP_TRAJECTORY))){
-        navigation_state = OUT_OF_BOUNDS;
-      } //else if (obstacle_free_confidence == 0){
-       // navigation_state = OBSTACLE_FOUND;
-      //}
-      else if (divergence>=5.0f){
-        printf("hellop world");
-          navigation_state = OBSTACLE_FOUND_OPTICFLOW;
-      } else {
-        moveWaypointForward(WP_GOAL, moveDistance);
-      }
-      break;
+    switch (navigation_state){
+        case SAFE:
+            // Move waypoint forward
+            moveWaypointForward(WP_TRAJECTORY, 0.7f * moveDistance);
+            if (!InsideObstacleZone(WaypointX(WP_TRAJECTORY),WaypointY(WP_TRAJECTORY))){
+                navigation_state = OUT_OF_BOUNDS;
+            } else if (obstacle_free_confidence == 0){
+                navigation_state = OBSTACLE_FOUND;
+            } else if (divergence > 5.0f){
+                navigation_state = OBSTACLE_FOUND;
 
-    //case OBSTACLE_FOUND:
-      // stop
-      //waypoint_move_here_2d(WP_GOAL);
-      //waypoint_move_here_2d(WP_TRAJECTORY);
+            }else if (divergence < 0.01f){
+                navigation_state = OBSTACLE_FOUND;
 
-      // randomly select new search direction
-      //chooseRandomIncrementAvoidance();
+            }else {
+                moveWaypointForward(WP_GOAL, moveDistance);
+            }
 
-      //navigation_state = SEARCH_FOR_SAFE_HEADING;
+            break;
+        case OBSTACLE_FOUND:
+            // stop
+            waypoint_move_here_2d(WP_GOAL);
+            waypoint_move_here_2d(WP_TRAJECTORY);
 
-      //break;
-      case OBSTACLE_FOUND_OPTICFLOW:
+            // randomly select new search direction
+            chooseRandomIncrementAvoidance();
 
-          // stop
-          waypoint_move_here_2d(WP_GOAL);
-          waypoint_move_here_2d(WP_TRAJECTORY);
+            navigation_state = SEARCH_FOR_SAFE_HEADING;
 
-          // randomly select new search direction
-          chooseRandomIncrementAvoidance();
+            break;
+        case SEARCH_FOR_SAFE_HEADING:
+            increase_nav_heading(heading_increment);
 
-          navigation_state = SEARCH_FOR_SAFE_HEADING_OPTICFLOW;
-          break;
-    //case SEARCH_FOR_SAFE_HEADING:
-      increase_nav_heading(heading_increment);
+            // make sure we have a couple of good readings before declaring the way safe
+            if (obstacle_free_confidence >= 2){
+                navigation_state = SAFE;
+            }
 
-      // make sure we have a couple of good readings before declaring the way safe
-      if (obstacle_free_confidence == 0){
-        navigation_state = SAFE;
-      }
-      break;
+            if (divergence < 5.f) {
+                 navigation_state = SAFE;
+            }
+            break;
+        case OUT_OF_BOUNDS:
+            waypoint_move_here_2d(WP_GOAL);
+            increase_nav_heading(heading_increment);
+            moveWaypointForward(WP_TRAJECTORY, 0.7f);
 
-      case SEARCH_FOR_SAFE_HEADING_OPTICFLOW:
+            if (InsideObstacleZone(WaypointX(WP_TRAJECTORY),WaypointY(WP_TRAJECTORY))){
+                // add offset to head back into arena
+                increase_nav_heading(heading_increment);
 
-          // make sure we have a couple of good readings before declaring the way safe
-          if (divergence < 5.f) {
-              navigation_state = SAFE;
-          }
-          break;
+                // reset safe counter
+                obstacle_free_confidence = 0;
 
-      case OUT_OF_BOUNDS:
-      increase_nav_heading(heading_increment);
-      moveWaypointForward(WP_TRAJECTORY, 1.5f);
+                // ensure direction is safe before continuing
+                navigation_state = SEARCH_FOR_SAFE_HEADING;
+            }
+            break;
+        default:
+            break;
+    }
 
-      if (InsideObstacleZone(WaypointX(WP_TRAJECTORY),WaypointY(WP_TRAJECTORY))){
-        // add offset to head back into arena
-        increase_nav_heading(heading_increment);
-
-        // reset safe counter
-        obstacle_free_confidence = 0;
-
-        // ensure direction is safe before continuing
-        navigation_state = SEARCH_FOR_SAFE_HEADING;
-      }
-      break;
-    default:
-      break;
-  }
+//  switch (navigation_state){
+//      case OUT_OF_BOUNDS:
+//          increase_nav_heading(180);
+//          moveWaypointForward(WP_TRAJECTORY, 2.5f);
+//
+//          if (InsideObstacleZone(WaypointX(WP_TRAJECTORY),WaypointY(WP_TRAJECTORY))){
+//              // add offset to head back into arena
+//              increase_nav_heading(heading_increment);
+//
+//              // reset safe counter
+//              obstacle_free_confidence = 0;
+//
+//              // ensure direction is safe before continuing
+//              navigation_state = SEARCH_FOR_SAFE_HEADING;
+//          }
+//          break;
+//
+//    case SAFE:
+//      // Move waypoint forward
+//      moveWaypointForward(WP_TRAJECTORY, 1.f * moveDistance);
+//      if (!InsideObstacleZone(WaypointX(WP_TRAJECTORY),WaypointY(WP_TRAJECTORY))){
+//        navigation_state = OUT_OF_BOUNDS;
+//      } //else if (obstacle_free_confidence == 0){
+//       // navigation_state = OBSTACLE_FOUND;
+//      //}
+//      else if (divergence>=5.0f){
+//        printf("hellop world");
+//          navigation_state = OBSTACLE_FOUND_OPTICFLOW;
+//      } else {
+//        moveWaypointForward(WP_GOAL, moveDistance);
+//      }
+//      break;
+//
+//    //case OBSTACLE_FOUND:
+//      // stop
+//      //waypoint_move_here_2d(WP_GOAL);
+//      //waypoint_move_here_2d(WP_TRAJECTORY);
+//
+//      // randomly select new search direction
+//      //chooseRandomIncrementAvoidance();
+//
+//      //navigation_state = SEARCH_FOR_SAFE_HEADING;
+//
+//      //break;
+//      case OBSTACLE_FOUND_OPTICFLOW:
+//
+//          // stop
+//          waypoint_move_here_2d(WP_GOAL);
+//          waypoint_move_here_2d(WP_TRAJECTORY);
+//
+//          // randomly select new search direction
+//          chooseRandomIncrementAvoidance();
+//
+//          navigation_state = SEARCH_FOR_SAFE_HEADING_OPTICFLOW;
+//          break;
+//    //case SEARCH_FOR_SAFE_HEADING:
+//      increase_nav_heading(heading_increment);
+//
+//      // make sure we have a couple of good readings before declaring the way safe
+//      if (obstacle_free_confidence == 0){
+//        navigation_state = SAFE;
+//      }
+//      break;
+//
+//      case SEARCH_FOR_SAFE_HEADING_OPTICFLOW:
+//          increase_nav_heading(heading_increment);
+//          navigation_state = SAFE;
+//
+//          // make sure we have a couple of good readings before declaring the way safe
+////          if (divergence < 5.f) {
+////              navigation_state = SAFE;
+////          }
+//          break;
+//
+//    default:
+//      break;
+//  }
   return;
 }
 
@@ -279,11 +344,12 @@ uint8_t chooseRandomIncrementAvoidance(void)
 {
   // Randomly choose CW or CCW avoiding direction
   if (rand() % 2 == 0) {
-    heading_increment = 10.f;
-    VERBOSE_PRINT("Set avoidance increment to: %f\n", heading_increment);
-  } else {
-    heading_increment = -10.f;
-    VERBOSE_PRINT("Set avoidance increment to: %f\n", heading_increment);
+      heading_increment = 10.0f;
+      VERBOSE_PRINT("Set avoidance increment to: %f\n", heading_increment);
+//  } else {
+//    heading_increment = -10.f;
+//    VERBOSE_PRINT("Set avoidance increment to: %f\n", heading_increment);
+//  }
   }
   return false;
 }

@@ -193,6 +193,7 @@ void color_object_detector_init(void)
 #endif
 }
 
+
 /*
  * find_object_centroid
  *
@@ -246,35 +247,50 @@ uint32_t find_object_centroid(struct image_t *img, int32_t* p_xc, int32_t* p_yc,
         cnt ++;
         tot_x += x;
         tot_y += y;
+
         if (draw){
-          *yp = 255;  // make pixel brighter in image
-//          *up = 200;
-//          *vp = 220;
+
+            *yp = 150;// make pixel brighter in image
+            //*up = 0;
+            //*vp = 0;
         }
       }
     }
   }
-//    {
-//        int n = 1920*2;
-//        uint8_t *yp, *up, *vp;
-//        up = &buffer[0 + 3 * n];      // U
-//        yp = &buffer[1 + 3 * n];  // Y1
-//        vp = &buffer[2 + 3 * n];  // V
-//
-//        *yp = 255;  // make pixel brighter in image
-//        *up = 0;
-//        *vp = 0;
-//    }
+    {
 
 
-//    printf("Hello world!\n");
-//    {
-//
-//        size_t n = sizeof(uint8_t)/sizeof(&buffer);
-//        printf("Size of array: %f", n);
-//
-//    }
+        int n;
+        int N = 240 * 520;
+        for (n = 62400; n < N; n++) {
+            uint8_t *yp, *up, *vp;
+            if (n % 2 == 0) {
+                // Even x
+                // Pull request for the pixel order colours
+                up = &buffer[2 * n];      // U
+                yp = &buffer[2 * n + 1];  // Y1
+                vp = &buffer[2 * n + 2];  // V
+                //yp = &buffer[y * 2 * img->w + 2 * x + 3]; // Y2
+            } else {
+                // Uneven x
+                up = &buffer[2 * n - 2];  // U
+                //yp = &buffer[y * 2 * img->w + 2 * x - 1]; // Y1
+                vp = &buffer[2 * n];      // V
+                yp = &buffer[2 * n + 1];  // Y2
+            }
 
+            *yp = 200;  // make pixel brighter in image
+            *up = 30;
+            *vp =250;
+
+        }
+
+    }
+
+
+
+
+    //
 //    {
 //        int n = 480*100;
 //        uint8_t *yp, *up, *vp;
@@ -282,10 +298,11 @@ uint32_t find_object_centroid(struct image_t *img, int32_t* p_xc, int32_t* p_yc,
 //        yp = &buffer[1 + 3 * n];  // Y1
 //        vp = &buffer[2 + 3 * n];  // V
 //
-//        *yp = 255;  // make pixel brighter in image
-//        *up = 0;
-//        *vp = 0;
+//        *yp = 0.5;  // make pixel brighter in image
+//        *up = 0.5;
+//        *vp = -0.5;
 //    }
+//
 //
 //    {
 //        int n = 240 + 1920;
@@ -335,6 +352,8 @@ uint32_t find_object_centroid(struct image_t *img, int32_t* p_xc, int32_t* p_yc,
 //        *vp = 0;
 //    }
 
+//
+
 
 
   if (cnt > 0) {
@@ -365,6 +384,38 @@ void color_object_detector_periodic(void)
     local_filters[1].updated = false;
   }
 }
+
+//int cent_nn = 62520;
+//int w_nn = 100;
+//int h_nn = 100;
+//
+//
+// int tl_nn;
+// int br_nn;
+//
+//    tl_nn = cent_nn - int(h_nn * 0.5)* img->w - int(w_nn*0.5);
+//    //br_nn = cent_nn + int(h_nn * 0.5)* img->w + int(w_nn*0.5);
+//
+//    int n;
+//    int i;
+//    for (i=0;i=h_nn;i++){
+//        tl_nn += i*width;
+//        for (n=tl_nn;n=tl_nn+w_nn;n++)
+//            {
+//            uint8_t *yp, *up, *vp;
+//            up = &buffer[0 + 2 * n];      // U
+//            yp = &buffer[1 + 2 * n];  // Y1
+//            vp = &buffer[2 + 2 * n];  // V
+//
+//            *yp = 0.5;  // make pixel brighter in image
+//            *up = 0.1;
+//            *vp = 0.5;
+//            }
+//
+//
+//
+//
+//    };
 
 
 
