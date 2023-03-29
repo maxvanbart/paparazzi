@@ -150,10 +150,13 @@ void orange_avoider_periodic(void)
             } else if (divergence > 5.0f){
                 navigation_state = OBSTACLE_FOUND;
 
-            }else if (-0.01f < divergence < 0.01f){
-                navigation_state = OBSTACLE_FOUND;
+            }
+            //else if ( divergence < 0.001f){
+               // if (divergence > -0.001f) {
+            //       navigation_state = OBSTACLE_FOUND;
+              //  }
 
-            }else {
+            else {
                 moveWaypointForward(WP_GOAL, 0.5f*moveDistance);
             }
 
@@ -270,9 +273,9 @@ void orange_avoider_periodic(void)
 //          navigation_state = SAFE;
 //
 //          // make sure we have a couple of good readings before declaring the way safe
-////          if (divergence < 5.f) {
-////              navigation_state = SAFE;
-////          }
+//           if (divergence < 5.f) {
+//              navigation_state = SAFE;
+//          }
 //          break;
 //
 //    default:
