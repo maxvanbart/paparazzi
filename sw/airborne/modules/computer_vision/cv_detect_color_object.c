@@ -242,9 +242,9 @@ uint32_t find_object_centroid(struct image_t *img, int32_t* p_xc, int32_t* p_yc,
         yp = &buffer[y * 2 * img->w + 2 * x + 1];  // Y2
       }
 
-        if ( (*yp >= 120) && (*yp <= 270) &&
-             (*up >= 110) && (*up <= 140) &&
-             (*vp >= 110) && (*vp <= 140)) {
+        if ( (*yp >= 190) && (*yp <= 250) &&
+             (*up >= 80) && (*up <= 140) &&
+             (*vp >= 80) && (*vp <= 140)) {
             cnt ++;
             tot_x += x;
             tot_y += y;

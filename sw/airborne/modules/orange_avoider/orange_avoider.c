@@ -346,10 +346,10 @@ uint8_t chooseRandomIncrementAvoidance(void)
       heading_increment = 10.0f;
       VERBOSE_PRINT("Set avoidance increment to: %f\n", heading_increment);
   }
-  else {
-    heading_increment = -10.f;
-    VERBOSE_PRINT("Set avoidance increment to: %f\n", heading_increment);
-  }
+//  else {
+//    heading_increment = -10.f;
+//    VERBOSE_PRINT("Set avoidance increment to: %f\n", heading_increment);
+//  }
 
   return false;
 }
