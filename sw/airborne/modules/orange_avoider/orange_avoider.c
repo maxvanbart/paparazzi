@@ -137,12 +137,12 @@ void orange_avoider_periodic(void)
   // bound obstacle_free_confidence
   Bound(obstacle_free_confidence, 0, max_trajectory_confidence);
 
-  float moveDistance = fminf(maxDistance, 0.5f * obstacle_free_confidence);
+  float moveDistance = fminf(maxDistance, 1.0f * obstacle_free_confidence);
 
     switch (navigation_state){
         case SAFE:
             // Move waypoint forward
-            moveWaypointForward(WP_TRAJECTORY, 0.7f * moveDistance);
+            moveWaypointForward(WP_TRAJECTORY, 1.0f * moveDistance);
             if (!InsideObstacleZone(WaypointX(WP_TRAJECTORY),WaypointY(WP_TRAJECTORY))){
                 navigation_state = OUT_OF_BOUNDS;
             } else if (obstacle_free_confidence == 0){
@@ -150,11 +150,11 @@ void orange_avoider_periodic(void)
             } else if (divergence > 5.0f){
                 navigation_state = OBSTACLE_FOUND;
 
-            }else if (divergence < 0.01f){
+            }else if (-0.01f < divergence < 0.01f){
                 navigation_state = OBSTACLE_FOUND;
 
             }else {
-                moveWaypointForward(WP_GOAL, moveDistance);
+                moveWaypointForward(WP_GOAL, 0.5f*moveDistance);
             }
 
             break;
@@ -346,11 +346,11 @@ uint8_t chooseRandomIncrementAvoidance(void)
   if (rand() % 2 == 0) {
       heading_increment = 10.0f;
       VERBOSE_PRINT("Set avoidance increment to: %f\n", heading_increment);
-//  } else {
-//    heading_increment = -10.f;
-//    VERBOSE_PRINT("Set avoidance increment to: %f\n", heading_increment);
-//  }
+  } else {
+    heading_increment = -5.f;
+    VERBOSE_PRINT("Set avoidance increment to: %f\n", heading_increment);
   }
+
   return false;
 }
 
