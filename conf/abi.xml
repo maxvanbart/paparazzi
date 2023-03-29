@@ -54,12 +54,12 @@
     </message>
 
     <message name="OPTICAL_FLOW" id="11">
-      <field name="stamp" type="uint32_t" unit="us"/>
-      <field name="flow_x" type="int32_t">Flow in x direction from the camera (in subpixels)</field>
-      <field name="flow_y" type="int32_t">Flow in y direction from the camera (in subpixels)</field>
-      <field name="flow_der_x" type="int32_t">The derotated flow calculation in the x direction (in subpixels)</field>
-      <field name="flow_der_y" type="int32_t">The derotated flow calculation in the y direction (in subpixels)</field>
-      <field name="quality" type="float"/>
+      <field name="stamp"           type="uint32_t" unit="us"/>
+      <field name="flow_x"          type="int32_t">Flow in x direction from the camera (in subpixels)</field>
+      <field name="flow_y"          type="int32_t">Flow in y direction from the camera (in subpixels)</field>
+      <field name="flow_der_x"      type="int32_t">The derotated flow calculation in the x direction (in subpixels)</field>
+      <field name="flow_der_y"      type="int32_t">The derotated flow calculation in the y direction (in subpixels)</field>
+      <field name="quality"         type="float"/>
       <field name="size_divergence" type="float">Divergence as determined with the size method (in 1/seconds) with LK, and Divergence (1/seconds) itself with EF</field>
     </message>
 
@@ -116,6 +116,7 @@
       <field name="h" type="float" unit="m"/>
       <field name="ax" type="float" unit="m/s^2"/>
       <field name="ay" type="float" unit="m/s^2"/>
+      <field name="yawr" type="float" unit="deg/s"/>
       <field name="yawr" type="float" unit="deg/s"/>
     </message>
 

@@ -31,7 +31,6 @@
 
 #include "size_divergence.h"
 #include <stdlib.h>
-
 /**
  * Get divergence from optical flow vectors based on line sizes between corners
  * @param[in] vectors    The optical flow vectors
