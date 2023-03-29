@@ -94,7 +94,9 @@ static void optical_flow_cb(uint8_t __attribute__ ((unused)) sender_id,
                             int32_t __attribute__ ((unused)) flow_der_y, float __attribute__ ((unused)) quality,
                             float size_divergence)
 {
-    divergence = 10*size_divergence;
+    divergence = 0.1* sqrt(size_divergence*size_divergence);
+
+
 }
 /*
  * Initialisation function, setting the colour filter, random seed and heading_increment
@@ -137,12 +139,12 @@ void orange_avoider_periodic(void)
   // bound obstacle_free_confidence
   Bound(obstacle_free_confidence, 0, max_trajectory_confidence);
 
-  float moveDistance = fminf(maxDistance, 1.0f * obstacle_free_confidence);
+  float moveDistance = fminf(maxDistance, 0.2f * obstacle_free_confidence);
 
     switch (navigation_state){
         case SAFE:
             // Move waypoint forward
-            moveWaypointForward(WP_TRAJECTORY, 1.0f * moveDistance);
+            moveWaypointForward(WP_TRAJECTORY, 1.5f * moveDistance);
             if (!InsideObstacleZone(WaypointX(WP_TRAJECTORY),WaypointY(WP_TRAJECTORY))){
                 navigation_state = OUT_OF_BOUNDS;
             } else if (obstacle_free_confidence == 0){
@@ -150,14 +152,8 @@ void orange_avoider_periodic(void)
             } else if (divergence > 5.0f){
                 navigation_state = OBSTACLE_FOUND;
 
-            }
-            //else if ( divergence < 0.001f){
-               // if (divergence > -0.001f) {
-            //       navigation_state = OBSTACLE_FOUND;
-              //  }
-
-            else {
-                moveWaypointForward(WP_GOAL, 0.5f*moveDistance);
+            }else {
+                moveWaypointForward(WP_GOAL, 1.5f*moveDistance);
             }
 
             break;
@@ -187,7 +183,7 @@ void orange_avoider_periodic(void)
         case OUT_OF_BOUNDS:
             waypoint_move_here_2d(WP_GOAL);
             increase_nav_heading(heading_increment);
-            moveWaypointForward(WP_TRAJECTORY, 0.7f);
+            moveWaypointForward(WP_TRAJECTORY, 1.5f);
 
             if (InsideObstacleZone(WaypointX(WP_TRAJECTORY),WaypointY(WP_TRAJECTORY))){
                 // add offset to head back into arena
@@ -273,9 +269,9 @@ void orange_avoider_periodic(void)
 //          navigation_state = SAFE;
 //
 //          // make sure we have a couple of good readings before declaring the way safe
-//           if (divergence < 5.f) {
-//              navigation_state = SAFE;
-//          }
+////          if (divergence < 5.f) {
+////              navigation_state = SAFE;
+////          }
 //          break;
 //
 //    default:
@@ -349,8 +345,9 @@ uint8_t chooseRandomIncrementAvoidance(void)
   if (rand() % 2 == 0) {
       heading_increment = 10.0f;
       VERBOSE_PRINT("Set avoidance increment to: %f\n", heading_increment);
-  } else {
-    heading_increment = -5.f;
+  }
+  else {
+    heading_increment = -10.f;
     VERBOSE_PRINT("Set avoidance increment to: %f\n", heading_increment);
   }
 
