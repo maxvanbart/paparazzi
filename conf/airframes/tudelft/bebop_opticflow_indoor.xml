@@ -36,7 +36,7 @@
       <define name="OPTICFLOW_CAMERA" value="bottom_camera"/>
       <define name="OPTICFLOW_DEROTATION_CORRECTION_FACTOR_X" value="0.8"/> <!--Obtained from a linefit-->
       <define name="OPTICFLOW_DEROTATION_CORRECTION_FACTOR_Y" value="0.85"/> <!--Obtained from a linefit-->
-      <configure name="OPTICFLOW_MAX_TRACK_CORNERS" value="20"/>
+      <configure name="OPTICFLOW_MAX_TRACK_CORNERS" value="25"/>
       <define name="OPTICFLOW_FEATURE_MANAGEMENT" value="0"/>
       <define name="OPTICFLOW_FPS" value="60"/>
       <define name="OPTICFLOW_PYRAMID_LEVEL" value="0"/>

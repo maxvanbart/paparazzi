@@ -268,9 +268,9 @@ uint32_t find_object_centroid(struct image_t *img, int32_t* p_xc, int32_t* p_yc,
         yp = &buffer[y * 2 * img->w + 2 * x + 1];  // Y2
       }
 ////white
-//        if ( (*yp >= 200) && (*yp <= 250) &&
-//             (*up >= 60) && (*up <= 160) &&
-//             (*vp >= 60) && (*vp <= 160)) {
+//        if ( (*yp >= 230) && (*yp <= 240) &&
+//             (*up >= 100) && (*up <= 140) &&
+//             (*vp >= 100) && (*vp <= 140)) {
 //            cnt ++;
 //            tot_x += x;
 //            tot_y += y;
@@ -282,10 +282,10 @@ uint32_t find_object_centroid(struct image_t *img, int32_t* p_xc, int32_t* p_yc,
 //                *vp = 196;
 //            }
 //        }
-//        //black
-//        if ( (*yp >= 70) && (*yp <= 120) && //too much
-//             (*up >= 90) && (*up <= 150) &&
-//             (*vp >= 90) && (*vp <= 150)) {
+////        //black
+//        if ( (*yp >= 60) && (*yp <= 90) && //too much
+//             (*up >= 100) && (*up <= 140) &&
+//             (*vp >= 100) && (*vp <= 140)) {
 //            cnt ++;
 //            tot_x += x;
 //            tot_y += y;
@@ -297,7 +297,7 @@ uint32_t find_object_centroid(struct image_t *img, int32_t* p_xc, int32_t* p_yc,
 //                *vp = 196;
 //            }
 //        }
-//// Green
+////// Green
 //        if ( (*yp >= 25) && (*yp <= 60) &&
 //             (*up >= 104) && (*up <= 114) &&
 //             (*vp >= 98) && (*vp <= 111)) {

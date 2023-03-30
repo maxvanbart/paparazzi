@@ -26,9 +26,9 @@
 
       <!-- General optical flow calculation parameters -->
       <define name="METHOD" value="0" description="Method used to calculate optical flow"/>
-      <define name="WINDOW_SIZE" value="10" description="Window size used for block matching (pixels)"/>
+      <define name="WINDOW_SIZE" value="20" description="Window size used for block matching (pixels)"/>
       <define name="SEARCH_DISTANCE" value="10" description="Maximum search distance for blockmatching (pixels)"/>
-      <define name="SUBPIXEL_FACTOR" value="10" description="Amount of subpixels per pixel, used for more precise (subpixel) calculations of the flow"/>
+      <define name="SUBPIXEL_FACTOR" value="15" description="Amount of subpixels per pixel, used for more precise (subpixel) calculations of the flow"/>
       <define name="RESOLUTION_FACTOR" value="1000" description="The resolution factor needed to calculate the divergence without floats"/>
       <define name="DEROTATION" value="1" description="Derotation either turned on or off (depended on gyroscope measurements)"/>
       <define name="MEDIAN_FILTER" value="0" description="A median filter on the resulting velocities to be turned on or off (last 5 measurements)"/>
@@ -55,7 +55,7 @@
       <!-- ACT-FAST parameters -->
       <define name="ACTFAST_LONG_STEP" value="10" description="Step size to take when there is no texture"/>
       <define name="ACTFAST_SHORT_STEP" value="2" description="Step size to take when there is an edge to be followed"/>
-      <define name="ACTFAST_MIN_GRADIENT" value="10" description="Threshold that decides when there is sufficient texture for edge following"/>
+      <define name="ACTFAST_MIN_GRADIENT" value="2" description="Threshold that decides when there is sufficient texture for edge following"/>
       <define name="ACTFAST_GRADIENT_METHOD" value="1" description="Whether to use a simple (0) or Sobel (1) filter"/>
 
       <!-- =========== CAMERA 2 SETTINGS ============ -->
