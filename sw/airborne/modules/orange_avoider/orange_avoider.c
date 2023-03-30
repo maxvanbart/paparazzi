@@ -46,9 +46,7 @@ static uint8_t chooseRandomIncrementAvoidance(void);
 enum navigation_state_t {
   SAFE,
   OBSTACLE_FOUND,
-  //OBSTACLE_FOUND_OPTICFLOW,
   SEARCH_FOR_SAFE_HEADING,
-  //SEARCH_FOR_SAFE_HEADING_OPTICFLOW,
   OUT_OF_BOUNDS
 };
 
@@ -145,7 +143,7 @@ void orange_avoider_periodic(void)
   // bound obstacle_free_confidence
   Bound(obstacle_free_confidence, 0, max_trajectory_confidence);
 
-  float moveDistance = fminf(maxDistance, 1.5f * obstacle_free_confidence);
+  float moveDistance = fminf(maxDistance, 1.0 * obstacle_free_confidence);
 
     switch (navigation_state){
         case SAFE:
@@ -155,45 +153,40 @@ void orange_avoider_periodic(void)
                 navigation_state = OUT_OF_BOUNDS;
             } else if (obstacle_free_confidence == 0){
                 navigation_state = OBSTACLE_FOUND;
-            } else if (divergence > 5.0f){
+            } else if (divergence >= 6.0f){
                 navigation_state = OBSTACLE_FOUND;
-            }
-            //else if ( divergence < 0.001f){
+            }//else if ( divergence < 0.001f){
                // if (divergence > -0.001f) {
             //       navigation_state = OBSTACLE_FOUND;
-              //  }
+            //  }
             else {
                 moveWaypointForward(WP_GOAL, 0.5f*moveDistance);
             }
-
             break;
         case OBSTACLE_FOUND:
             // stop
             waypoint_move_here_2d(WP_GOAL);
             waypoint_move_here_2d(WP_TRAJECTORY);
-
             // randomly select new search direction
             chooseRandomIncrementAvoidance();
-
             navigation_state = SEARCH_FOR_SAFE_HEADING;
-
             break;
         case SEARCH_FOR_SAFE_HEADING:
             increase_nav_heading(heading_increment);
-
             // make sure we have a couple of good readings before declaring the way safe
             if (obstacle_free_confidence >= 2){
                 navigation_state = SAFE;
-            }
-
-            if (divergence < 6.f) {
+            } else if (divergence < 6.f) {
                  navigation_state = SAFE;
             }
             break;
         case OUT_OF_BOUNDS:
-            waypoint_move_here_2d(0.8*WP_GOAL);
-            //increase_nav_heading(heading_increment);
-            moveWaypointForward(WP_TRAJECTORY, 1.0f);
+            // stop
+            waypoint_move_here_2d(WP_GOAL);
+            waypoint_move_here_2d(WP_TRAJECTORY);
+            increase_nav_heading(heading_increment);
+            moveWaypointForward(WP_TRAJECTORY, 1.0f * moveDistance);
+
 
             if (InsideObstacleZone(WaypointX(WP_TRAJECTORY),WaypointY(WP_TRAJECTORY))){
                 // add offset to head back into arena
