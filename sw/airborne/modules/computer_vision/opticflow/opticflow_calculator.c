@@ -536,14 +536,15 @@ bool calc_fast9_lukas_kanade(struct opticflow_t *opticflow, struct image_t *img,
   } else if (!opticflow->feature_management) {
     // needs to be set to 0 because result is now static
     result->corner_cnt = 0;
-    if (opticflow->corner_method == EXHAUSTIVE_FAST) {
+    7if (opticflow->corner_method == EXHAUSTIVE_FAST) {
       // FAST corner detection
       // TODO: There is something wrong with fast9_detect destabilizing FPS. This problem is reduced with putting min_distance
       // to 0 (see defines), however a more permanent solution should be considered
       fast9_detect(&opticflow->prev_img_gray, opticflow->fast9_threshold, opticflow->fast9_min_distance,
                    opticflow->fast9_padding, opticflow->fast9_padding, &result->corner_cnt, &opticflow->fast9_rsize,
                    &opticflow->fast9_ret_corners, NULL);
-    } else if (opticflow->corner_method == ACT_FAST) {
+    }
+    else if (opticflow->corner_method == ACT_FAST) {
       // ACT-FAST corner detection:
       act_fast(&opticflow->prev_img_gray, opticflow->fast9_threshold, &result->corner_cnt,
                &opticflow->fast9_ret_corners, n_agents[opticflow->id], n_time_steps[opticflow->id],
