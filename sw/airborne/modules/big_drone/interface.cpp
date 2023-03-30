@@ -4,6 +4,7 @@
 #include "net.h"
 #include "tensor.h"
 
+// Testing function which should not run in the current implementation
 int test_function(int n) {
     std::cout << "This interface should be on the image processing thread! " << n << std::endl;
 
@@ -15,7 +16,7 @@ int test_function(int n) {
     return n * n;
 }
 
-
+// Other testing function to test the passthrough of the image to C++
 int detect_yolo(const unsigned int *img, const int w, const int h) {
 
 

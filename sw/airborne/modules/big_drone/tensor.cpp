@@ -1,43 +1,5 @@
 #include "tensor.h"
 
-//template<typename T>
-//class Tensor<T>::Tensor {
-//public:
-//    explicit Tensor(int d1 = 1, int d2 = 1, int d3 = 1) {
-//        width = d1;
-//        height = d2;
-//        depth = d3;
-//        size = width * height * depth;
-//        data = new T[size];
-//    }
-//
-//    ~Tensor() {
-//        delete[] data;
-//        size = 0;
-//    }
-//
-//    T& operator[] (int i) const {
-//        if (i < size) {
-//            return data[i];
-//        }
-//    }
-//
-//    T& operator() (int i, int j, int k) const {
-//        int entry = i + width * j + width * height * k;
-//        if (entry < size) {
-//            return data[entry];
-//        } else {
-//            return 0;
-//        }
-//    }
-//
-////private:
-////    T* data;
-////    int width;
-////    int height;
-////    int depth;
-////    int size;
-//};
 
 // Default constructor
 Tensor::Tensor() {
@@ -79,11 +41,13 @@ Tensor::Tensor(Tensor &&other) noexcept: width(other.width), height(other.height
     other.data = nullptr;
 }
 
+// Default destructor to avoid memory leaks
 Tensor::~Tensor() {
     delete[] data;
     size = 0;
 }
 
+// Function to get the i'th element stored in the tensor (neglecting the 3 dimensional property)
 double &Tensor::operator[](int i) const {
     if (i < size) {
         return data[i];
@@ -92,6 +56,7 @@ double &Tensor::operator[](int i) const {
     return data[0];
 }
 
+// Function to get the specific value at some 3-dimensional location in the Tensor
 double &Tensor::operator()(int i, int j, int k) const {
     int entry = i + width * j + width * height * k;
     if (entry < size) {
@@ -126,6 +91,7 @@ Tensor &Tensor::operator=(Tensor &&other) {
     return *this;
 }
 
+// Function to print the contents of the Tensor in a format which can be interpreted by a human as a 3d-matrix
 void Tensor::print() {
 
     for (int k = 0; k < depth; k++) {
@@ -140,6 +106,7 @@ void Tensor::print() {
     }
 }
 
+// Turn the Tensor into a flat Tensor to transfer from the convolution to the linear layer
 Tensor Tensor::flatten() {
     Tensor y(size, 1, 1);
     for (int i = 0; i < size; i++) {
@@ -147,40 +114,3 @@ Tensor Tensor::flatten() {
     }
     return y;
 }
-
-
-
-
-
-
-//Tensor &Tensor::operator=(const Tensor& other) {
-//    width = other.width;
-//    height = other.height;
-//    depth = other.depth;
-//    size = other.size;
-//
-//    delete[] data;
-//    data = new double[size];
-//
-//    for (int i = 0; i < other.size; i++) {
-//        data[i] = other.data[i];
-//    }
-//    return *this;
-//}
-//
-//Tensor& Tensor::operator=(const Tensor &&other) {
-//    width = other.width;
-//    height = other.height;
-//    depth = other.depth;
-//    size = other.size;
-//
-//    delete[] data;
-//    data = new double[size];
-//
-//    for (int i = 0; i < other.size; i++) {
-//        data[i] = other.data[i];
-//    }
-//    return *this;
-//}
-
-

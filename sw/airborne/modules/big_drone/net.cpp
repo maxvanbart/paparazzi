@@ -6,9 +6,10 @@
 #include <chrono>
 
 Tensor net(Tensor img) {
-
+    // Store the current time in order to time the run-time of the forward pass
     auto start = std::chrono::high_resolution_clock::now();
 
+    // Initialize all layers which are used for the forward pass
     Tensor x = img;
     Conv2d l1(3, 8, 3, 1, 1);
     Conv2d l2(8, 12, 3, 1, 1);
@@ -29,6 +30,8 @@ Tensor net(Tensor img) {
     Conv2d l17(150, 40, 1, 1, 0);
     Conv2d l18(40, 150, 3, 1, 1);
 
+    // Generate random parameters for all network layers, this should be replaced by loading parameters in a final
+    // implementation
     l1.init_params();
     l2.init_params();
     l3.init_params();
@@ -48,7 +51,7 @@ Tensor net(Tensor img) {
     l17.init_params();
     l18.init_params();
 
-    // downsize 448 * 448 input
+    // downsize 448 * 448 input -> 224 * 224 input to increase speed
     x = maxpool(x, 2, 2);
     x = l1.forward(x);
     x = relu(x);
@@ -92,9 +95,10 @@ Tensor net(Tensor img) {
 //    x = l18.forward(x);
 //    x = relu(x);
 
+    // Get the stop time and calculate the run time in ms
     auto stop = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
-
+    // Print the run time for the forward pass.
     std::cout << "Time taken for forward pass: "<< duration.count() << " ms" << std::endl;
 
     return x;
