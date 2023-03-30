@@ -59,6 +59,10 @@ float oa_color_count_frac = 0.18f;
 enum navigation_state_t navigation_state = SEARCH_FOR_SAFE_HEADING;//SEARCH_FOR_SAFE_HEADING_OPTICFLOW; //
 int32_t color_count = 0;                // orange color count from color filter for obstacle detection
 int32_t divergence = 0;
+int32_t flowy = 0;
+int32_t flowx = 0;
+int32_t flowderx = 0;
+int32_t flowdery = 0;
 int16_t obstacle_free_confidence = 0;   // a measure of how certain we are that the way ahead is safe.
 float heading_increment = 5.f;          // heading angle increment [deg]
 float maxDistance = 2.25;               // max waypoint displacement [m]
@@ -89,12 +93,17 @@ static void color_detection_cb(uint8_t __attribute__((unused)) sender_id,
 #endif
 static abi_event optical_flow_ev;
 static void optical_flow_cb(uint8_t __attribute__ ((unused)) sender_id,
-                            int32_t __attribute__ ((unused)) stamp, int32_t __attribute__ ((unused)) flow_x,
-                            int32_t __attribute__ ((unused)) flow_y, int32_t __attribute__ ((unused)) flow_der_x,
-                            int32_t __attribute__ ((unused)) flow_der_y, float __attribute__ ((unused)) quality,
+                            int32_t __attribute__ ((unused)) stamp, int32_t flow_x,
+                            int32_t flow_y, int32_t flow_der_x,
+                            int32_t flow_der_y, float __attribute__ ((unused)) quality,
                             float size_divergence)
 {
-    divergence = 0.1* sqrt(size_divergence*size_divergence);
+    divergence = 10* sqrt(size_divergence*size_divergence);
+    flowy = flow_y;
+    flowx = flow_x;
+    flowderx = flow_der_x;
+    flowdery = flow_der_y;
+
 
 
 }
@@ -125,9 +134,9 @@ void orange_avoider_periodic(void)
   }
 
   // compute current color thresholds
-  int32_t color_count_threshold = oa_color_count_frac * front_camera.output_size.w * front_camera.output_size.h;
+  int32_t color_count_threshold = 0.8*oa_color_count_frac * front_camera.output_size.w * front_camera.output_size.h;
 
-  VERBOSE_PRINT("Color_count: %d  threshold: %d state: %d divergence: %f     \n", color_count, color_count_threshold, navigation_state, divergence);
+  VERBOSE_PRINT("Color_count: %d  threshold: %d state: %d divergence: %f  flowx:  %f, flowy:  %f, flowderx:  %f, flowdery:  %f   \n", color_count, color_count_threshold, navigation_state, divergence, flowx, flowy, flowderx, flowdery);
 
   // update our safe confidence using color threshold
   if(color_count < color_count_threshold){
@@ -139,12 +148,12 @@ void orange_avoider_periodic(void)
   // bound obstacle_free_confidence
   Bound(obstacle_free_confidence, 0, max_trajectory_confidence);
 
-  float moveDistance = fminf(maxDistance, 0.2f * obstacle_free_confidence);
+  float moveDistance = fminf(maxDistance, 1.5f * obstacle_free_confidence);
 
     switch (navigation_state){
         case SAFE:
             // Move waypoint forward
-            moveWaypointForward(WP_TRAJECTORY, 1.5f * moveDistance);
+            moveWaypointForward(WP_TRAJECTORY, 1.0f * moveDistance);
             if (!InsideObstacleZone(WaypointX(WP_TRAJECTORY),WaypointY(WP_TRAJECTORY))){
                 navigation_state = OUT_OF_BOUNDS;
             } else if (obstacle_free_confidence == 0){
@@ -153,7 +162,7 @@ void orange_avoider_periodic(void)
                 navigation_state = OBSTACLE_FOUND;
 
             }else {
-                moveWaypointForward(WP_GOAL, 1.5f*moveDistance);
+                moveWaypointForward(WP_GOAL, 0.5f*moveDistance);
             }
 
             break;
@@ -176,14 +185,14 @@ void orange_avoider_periodic(void)
                 navigation_state = SAFE;
             }
 
-            if (divergence < 5.f) {
+            if (divergence < 6.0f) {
                  navigation_state = SAFE;
             }
             break;
         case OUT_OF_BOUNDS:
             waypoint_move_here_2d(WP_GOAL);
             increase_nav_heading(heading_increment);
-            moveWaypointForward(WP_TRAJECTORY, 1.5f);
+            moveWaypointForward(WP_TRAJECTORY, 0.2f);
 
             if (InsideObstacleZone(WaypointX(WP_TRAJECTORY),WaypointY(WP_TRAJECTORY))){
                 // add offset to head back into arena
@@ -343,7 +352,7 @@ uint8_t chooseRandomIncrementAvoidance(void)
 {
   // Randomly choose CW or CCW avoiding direction
   if (rand() % 2 == 0) {
-      heading_increment = 10.0f;
+      heading_increment = 30.0f;
       VERBOSE_PRINT("Set avoidance increment to: %f\n", heading_increment);
   }
 //  else {

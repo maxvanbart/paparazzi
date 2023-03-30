@@ -353,7 +353,7 @@ PRINT_CONFIG_VAR(OPTICFLOW_ACTFAST_MIN_GRADIENT_CAMERA2)
 // Tracking back flow to make the accepted flow vectors more robust:
 // Default is false, as it does take extra processing time
 #ifndef OPTICFLOW_TRACK_BACK
-#define OPTICFLOW_TRACK_BACK FALSE
+#define OPTICFLOW_TRACK_BACK TRUE
 #endif
 
 #ifndef OPTICFLOW_TRACK_BACK_CAMERA2
@@ -365,7 +365,7 @@ PRINT_CONFIG_VAR(OPTICFLOW_TRACK_BACK_CAMERA2)
 // Whether to draw the flow on the image:
 // False by default, since it changes the image and costs time.
 #ifndef OPTICFLOW_SHOW_FLOW
-#define OPTICFLOW_SHOW_FLOW FALSE
+#define OPTICFLOW_SHOW_FLOW TRUE
 #endif
 
 #ifndef OPTICFLOW_SHOW_FLOW_CAMERA2
@@ -396,16 +396,16 @@ static struct flow_t *predict_flow_vectors(struct flow_t *flow_vectors, uint16_t
 void opticflow_calc_init(struct opticflow_t opticflow[])
 {
   /* Set the default values */
-  opticflow[0].method = OPTICFLOW_METHOD; //0 = LK_fast9, 1 = Edgeflow
+  opticflow[1].method = OPTICFLOW_METHOD; //0 = LK_fast9, 1 = Edgeflow ok
   opticflow[0].window_size = OPTICFLOW_WINDOW_SIZE;
   opticflow[0].search_distance = OPTICFLOW_SEARCH_DISTANCE;
-  opticflow[0].derotation = OPTICFLOW_DEROTATION; //0 = OFF, 1 = ON
-  opticflow[0].derotation_correction_factor_x = OPTICFLOW_DEROTATION_CORRECTION_FACTOR_X;
-  opticflow[0].derotation_correction_factor_y = OPTICFLOW_DEROTATION_CORRECTION_FACTOR_Y;
-  opticflow[0].track_back = OPTICFLOW_TRACK_BACK;
-  opticflow[0].show_flow = OPTICFLOW_SHOW_FLOW;
-  opticflow[0].max_track_corners = OPTICFLOW_MAX_TRACK_CORNERS;
-  opticflow[0].subpixel_factor = OPTICFLOW_SUBPIXEL_FACTOR;
+  opticflow[1].derotation = OPTICFLOW_DEROTATION; //0 = OFF, 1 = ON ok
+  opticflow[1].derotation_correction_factor_x = OPTICFLOW_DEROTATION_CORRECTION_FACTOR_X;//ok
+  opticflow[1].derotation_correction_factor_y = OPTICFLOW_DEROTATION_CORRECTION_FACTOR_Y; //ok
+  opticflow[1].track_back = OPTICFLOW_TRACK_BACK; //ok
+  opticflow[1].show_flow = OPTICFLOW_SHOW_FLOW;
+  opticflow[1].max_track_corners = OPTICFLOW_MAX_TRACK_CORNERS; //ok
+  opticflow[1].subpixel_factor = OPTICFLOW_SUBPIXEL_FACTOR; //ok
   if (opticflow[0].subpixel_factor == 0) {
     opticflow[0].subpixel_factor = 10;
   }
@@ -413,7 +413,7 @@ void opticflow_calc_init(struct opticflow_t opticflow[])
   opticflow[0].max_iterations = OPTICFLOW_MAX_ITERATIONS;
   opticflow[0].threshold_vec = OPTICFLOW_THRESHOLD_VEC;
   opticflow[0].pyramid_level = OPTICFLOW_PYRAMID_LEVEL;
-  opticflow[0].median_filter = OPTICFLOW_MEDIAN_FILTER;
+  opticflow[1].median_filter = OPTICFLOW_MEDIAN_FILTER;//ok
   opticflow[0].feature_management = OPTICFLOW_FEATURE_MANAGEMENT;
   opticflow[0].fast9_region_detect = OPTICFLOW_FAST9_REGION_DETECT;
   opticflow[0].fast9_num_regions = OPTICFLOW_FAST9_NUM_REGIONS;
@@ -425,7 +425,7 @@ void opticflow_calc_init(struct opticflow_t opticflow[])
   opticflow[0].fast9_rsize = FAST9_MAX_CORNERS;
   opticflow[0].fast9_ret_corners = calloc(opticflow[0].fast9_rsize, sizeof(struct point_t));
 
-  opticflow[0].corner_method = OPTICFLOW_CORNER_METHOD;
+  opticflow[1].corner_method = OPTICFLOW_CORNER_METHOD;//ok
   opticflow[0].actfast_long_step = OPTICFLOW_ACTFAST_LONG_STEP;
   opticflow[0].actfast_short_step = OPTICFLOW_ACTFAST_SHORT_STEP;
   opticflow[0].actfast_min_gradient = OPTICFLOW_ACTFAST_MIN_GRADIENT;

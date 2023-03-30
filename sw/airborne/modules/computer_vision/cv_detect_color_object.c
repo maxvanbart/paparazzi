@@ -222,6 +222,32 @@ uint32_t find_object_centroid(struct image_t *img, int32_t* p_xc, int32_t* p_yc,
   uint32_t tot_y = 0;
   uint8_t *buffer = img->buf;
 
+  //draw boudner:
+//    for (uint16_t y = 0; y < img->h; y++) {
+//        for (uint16_t x = 200; x < img->w; x ++) {
+//            // Check if the color is inside the specified values
+//            uint8_t *yp, *up, *vp;
+//            if (x % 2 == 0) {
+//                // Even x
+//                // Pull request for the pixel order colours
+//                up = &buffer[y * 2 * img->w + 2 * x];      // U
+//                yp = &buffer[y * 2 * img->w + 2 * x + 1];  // Y1
+//                vp = &buffer[y * 2 * img->w + 2 * x + 2];  // V
+//                //yp = &buffer[y * 2 * img->w + 2 * x + 3]; // Y2
+//            } else {
+//                // Uneven x
+//                up = &buffer[y * 2 * img->w + 2 * x - 2];  // U
+//                //yp = &buffer[y * 2 * img->w + 2 * x - 1]; // Y1
+//                vp = &buffer[y * 2 * img->w + 2 * x];      // V
+//                yp = &buffer[y * 2 * img->w + 2 * x + 1];  // Y2
+//            }
+//            *yp = 29;// make pixel brighter in image
+//            *up = 255;
+//            *vp = 107;
+//
+//        }
+//    }
+
   // Go through all the pixels
   for (uint16_t y = 0; y < img->h; y++) {
     for (uint16_t x = 0; x < img->w; x ++) {
@@ -241,24 +267,40 @@ uint32_t find_object_centroid(struct image_t *img, int32_t* p_xc, int32_t* p_yc,
         vp = &buffer[y * 2 * img->w + 2 * x];      // V
         yp = &buffer[y * 2 * img->w + 2 * x + 1];  // Y2
       }
-
-        if ( (*yp >= 190) && (*yp <= 250) &&
-             (*up >= 80) && (*up <= 140) &&
-             (*vp >= 80) && (*vp <= 140)) {
-            cnt ++;
-            tot_x += x;
-            tot_y += y;
-
-            if (draw){
-
-                *yp = 158;// make pixel brighter in image
-                *up = 38;
-                *vp = 196;
-            }
-        }
-//        if ( (*yp >= 50) && (*yp <= 120) &&
-//             (*up >= 110) && (*up <= 140) &&
-//             (*vp >= 110) && (*vp <= 140)) {
+////white
+//        if ( (*yp >= 200) && (*yp <= 250) &&
+//             (*up >= 60) && (*up <= 160) &&
+//             (*vp >= 60) && (*vp <= 160)) {
+//            cnt ++;
+//            tot_x += x;
+//            tot_y += y;
+//
+//            if (draw){
+//
+//                *yp = 158;// make pixel brighter in image
+//                *up = 38;
+//                *vp = 196;
+//            }
+//        }
+//        //black
+//        if ( (*yp >= 70) && (*yp <= 120) && //too much
+//             (*up >= 90) && (*up <= 150) &&
+//             (*vp >= 90) && (*vp <= 150)) {
+//            cnt ++;
+//            tot_x += x;
+//            tot_y += y;
+//
+//            if (draw){
+//
+//                *yp = 158;// make pixel brighter in image
+//                *up = 38;
+//                *vp = 196;
+//            }
+//        }
+//// Green
+//        if ( (*yp >= 25) && (*yp <= 60) &&
+//             (*up >= 104) && (*up <= 114) &&
+//             (*vp >= 98) && (*vp <= 111)) {
 //            cnt ++;
 //            tot_x += x;
 //            tot_y += y;
@@ -293,15 +335,17 @@ uint32_t find_object_centroid(struct image_t *img, int32_t* p_xc, int32_t* p_yc,
 
     //
 //    {
-//        int n = 480*100;
-//        uint8_t *yp, *up, *vp;
-//        up = &buffer[0 + 3 * n];      // U
-//        yp = &buffer[1 + 3 * n];  // Y1
-//        vp = &buffer[2 + 3 * n];  // V
+//        int n;
+//        for (n = 60000; n < 120000; n++){
+//            uint8_t *yp, *up, *vp;
+//            up = &buffer[0 + 3 * n];      // U
+//            yp = &buffer[1 + 3 * n];  // Y1
+//            vp = &buffer[2 + 3 * n];  // V
 //
-//        *yp = 0.5;  // make pixel brighter in image
-//        *up = 0.5;
-//        *vp = -0.5;
+//            *yp = 235;  // make pixel brighter in image
+//            *up = 128;
+//            *vp = 128;}
+//
 //    }
 //
 //
