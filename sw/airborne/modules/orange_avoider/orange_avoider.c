@@ -87,7 +87,7 @@ static void color_detection_cb(uint8_t __attribute__((unused)) sender_id,
                                int32_t quality, int16_t extra)
 {
   color_count = quality;
-  color_count_w = extra;
+//  color_count_w = extra; // to add and extra counting for white (not used in the final strategy).
 }
 
 #ifndef ORANGE_AVOIDER_OPTICAL_FLOW_ID
@@ -135,7 +135,7 @@ void orange_avoider_periodic(void)
     return;
   }
 
-  // compute current color thresholds
+  // compute current color thresholds, original value multiplied by 0.8 to reduce sensitivity to orange counting
   int32_t color_count_threshold = 0.8*oa_color_count_frac * front_camera.output_size.w * front_camera.output_size.h;
 
 //  VERBOSE_PRINT("Color_count: %d Threshold: %d State: %d Divergence: %f \n", color_count, color_count_threshold, navigation_state, divergence);
@@ -160,9 +160,13 @@ void orange_avoider_periodic(void)
             moveWaypointForward(WP_TRAJECTORY, 1.0f * moveDistance);
             if (!InsideObstacleZone(WaypointX(WP_TRAJECTORY),WaypointY(WP_TRAJECTORY))){
                 navigation_state = OUT_OF_BOUNDS;
-            } else if (obstacle_free_confidence == 0){
+            }
+            // Check for orange and white (draw to orange as well) objects.
+            else if (obstacle_free_confidence == 0){
                 navigation_state = OBSTACLE_FOUND;
-            } else if (divergence >= 6.f){
+            }
+            // Check for obstacles by means of detecting divergence
+            else if (divergence >= 6.f){
                 navigation_state = OBSTACLE_FOUND;
 
             }else {
@@ -194,6 +198,7 @@ void orange_avoider_periodic(void)
             }
             break;
         case OUT_OF_BOUNDS:
+            // changes to reduce drifting of the drone after direction change
             // stop
             waypoint_move_here_2d(WP_GOAL);
             waypoint_move_here_2d(WP_TRAJECTORY);
